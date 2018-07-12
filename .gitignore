@@ -1,0 +1,13 @@
+# package file
+*.war
+*.ear
+out/
+
+# idea
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# maven
+target/
