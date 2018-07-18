@@ -23,6 +23,7 @@ class Cd(dir: String) extends Command {
   }
 
   def doFindEntry(root: Directory, path: String): DirEntry = {
+
     @tailrec
     def findEntryHelper(currentDirectory: Directory, tokens: List[String]): DirEntry = {
 
@@ -35,7 +36,19 @@ class Cd(dir: String) extends Command {
       }
     }
 
+    @tailrec
+    def collapseRelativeTokens(path: List[String], result: List[String]): List[String] = {
+      if (path.isEmpty) result
+      else if (path.head.equals(".")) collapseRelativeTokens(path.tail, result)
+      else if (path.head.equals("..")) {
+        if (result.isEmpty) null
+        else collapseRelativeTokens(path.tail, result.init)
+      } else collapseRelativeTokens(path.tail, result :+ path.head)
+    }
+
     val tokens = path.substring(1).split(Directory.SEPARATOR).toList
-    findEntryHelper(root, tokens)
+    val newTokens = collapseRelativeTokens(tokens, List())
+    if (newTokens == null) null
+    findEntryHelper(root, newTokens)
   }
 }

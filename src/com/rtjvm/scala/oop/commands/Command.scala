@@ -15,6 +15,9 @@ object Command {
   val COMMAND_PWD = "pwd"
   val COMMAND_TOUCH = "touch"
   val COMMAND_CD = "cd"
+  val COMMAND_RM = "rm"
+  val COMMAND_ECHO = "echo"
+  val COMMAND_CAT = "cat"
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state.setMessage("")
@@ -40,6 +43,15 @@ object Command {
     } else if (msgArray(0).equals(COMMAND_CD)) {
       if (msgArray.length < 2) incompleteCommand(COMMAND_CD)
       else new Cd(msgArray(1))
+    } else if (msgArray(0).equals(COMMAND_RM)) {
+      if (msgArray.length < 2) incompleteCommand(COMMAND_RM)
+      else new Rm(msgArray(1))
+    } else if (msgArray(0).equals(COMMAND_ECHO)) {
+      if (msgArray.length < 2) incompleteCommand(COMMAND_ECHO)
+      else new Echo(msgArray.tail)
+    } else if (msgArray(0).equals(COMMAND_CAT)) {
+      if (msgArray.length < 2) incompleteCommand(COMMAND_CAT)
+      else new Cat(msgArray(1))
     }
     else new UnknownCommand
   }
